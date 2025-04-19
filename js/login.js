@@ -1,32 +1,37 @@
 import API_BASE_URL from './config.js';
 
-document.getElementById('loginForm').addEventListener('submit', async function(event) {
-    event.preventDefault();
+document.addEventListener("DOMContentLoaded", () => {
+  const formulario = document.getElementById('formLoginEstudiante');
 
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const loginError = document.getElementById('loginError');
+  formulario.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // Agregamos el log para confirmar que el submit se dispara
+    console.log("Formulario enviado - login estudiante");
+
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
 
     try {
-        const response = await fetch(`${API_BASE_URL}api/auth/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-        });
+      const res = await fetch(`${API_BASE_URL}api/estudiantes/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
 
-        const data = await response.json();
+      const data = await res.json();
 
-        if (response.ok) {
-            localStorage.setItem('token', data.token);
-            window.location.href = '/pages/dashboard.html';
+      if (res.ok) {
+        localStorage.setItem('tokenEstudiante', data.token);
+        alert('Login exitoso');
+        window.location.href = "/pages/dashboard-estudiante.html";
 
-        } else {
-            loginError.textContent = data.mensaje || 'Credenciales incorrectas';
-            loginError.classList.remove('d-none');
-        }
+      } else {
+        alert(data.mensaje || 'Error al iniciar sesión');
+      }
     } catch (error) {
-        loginError.textContent = 'Error de conexión';
-        loginError.classList.remove('d-none');
+      console.error('Error:', error);
+      alert('Error de conexión con el servidor');
     }
+  });
 });
-
