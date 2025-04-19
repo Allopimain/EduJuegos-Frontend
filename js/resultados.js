@@ -1,3 +1,5 @@
+vimport API_BASE_URL from "./config.js";
+
 document.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem("token");
 
@@ -6,12 +8,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    // Función para cargar estudiantes y actividades en los select
     const cargarOpciones = async () => {
-        const estudiantesRes = await fetch("http://localhost:3005/api/estudiantes", {
+        const estudiantesRes = await fetch(`${API_BASE_URL}api/estudiantes`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
-        const actividadesRes = await fetch("http://localhost:3005/api/actividades", {
+        const actividadesRes = await fetch(`${API_BASE_URL}api/actividades`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
 
@@ -36,9 +37,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     };
 
-    // Función para cargar los resultados
     const cargarResultados = async () => {
-        const response = await fetch("http://localhost:3005/api/resultados", {
+        const response = await fetch(`${API_BASE_URL}api/resultados`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
 
@@ -62,34 +62,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     };
 
-    // Función para agregar resultado
     document.getElementById("resultadoForm").addEventListener("submit", async (event) => {
         event.preventDefault();
-
-        const id_estudiante = document.getElementById("id_estudiante").value;
-        const id_actividad = document.getElementById("id_actividad").value;
-        const calificacion = document.getElementById("calificacion").value;
-        const comentarios = document.getElementById("comentarios").value;
-
-        const response = await fetch("http://localhost:3005/api/resultados", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({ id_estudiante, id_actividad, calificacion, comentarios })
-        });
-
-        if (response.ok) {
-            cargarResultados();
-            document.getElementById("resultadoForm").reset();
-        }
+        await agregarResultado(event);
     });
 
-    // Función para eliminar resultado
     window.eliminarResultado = async (id) => {
         if (confirm("¿Seguro que quieres eliminar este resultado?")) {
-            await fetch(`http://localhost:3005/api/resultados/${id}`, {
+            await fetch(`${API_BASE_URL}api/resultados/${id}`, {
                 method: "DELETE",
                 headers: { "Authorization": `Bearer ${token}` }
             });
@@ -97,9 +77,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
-    // Función para editar resultado
     window.editarResultado = async (id) => {
-        const response = await fetch(`http://localhost:3005/api/resultados/${id}`, {
+        const response = await fetch(`${API_BASE_URL}api/resultados/${id}`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
 
@@ -109,14 +88,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("calificacion").value = resultado.calificacion;
         document.getElementById("comentarios").value = resultado.comentarios;
 
-        // Cambiar el texto del botón de submit para editar
         const submitButton = document.querySelector('button[type="submit"]');
         submitButton.textContent = "Actualizar Resultado";
         submitButton.removeEventListener("click", agregarResultado);
         submitButton.addEventListener("click", (event) => actualizarResultado(event, id));
     };
 
-    // Función para actualizar resultado
     const actualizarResultado = async (event, id) => {
         event.preventDefault();
 
@@ -125,7 +102,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const calificacion = document.getElementById("calificacion").value;
         const comentarios = document.getElementById("comentarios").value;
 
-        const response = await fetch(`http://localhost:3005/api/resultados/${id}`, {
+        const response = await fetch(`${API_BASE_URL}api/resultados/${id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -137,7 +114,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (response.ok) {
             cargarResultados();
             document.getElementById("resultadoForm").reset();
-            // Cambiar el texto del botón de submit a "Asignar Calificación"
             const submitButton = document.querySelector('button[type="submit"]');
             submitButton.textContent = "Asignar Calificación";
             submitButton.removeEventListener("click", actualizarResultado);
@@ -145,7 +121,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
-    // Función para agregar resultado
     const agregarResultado = async (event) => {
         event.preventDefault();
 
@@ -154,7 +129,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const calificacion = document.getElementById("calificacion").value;
         const comentarios = document.getElementById("comentarios").value;
 
-        const response = await fetch("http://localhost:3005/api/resultados", {
+        const response = await fetch(`${API_BASE_URL}api/resultados`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -169,7 +144,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
-    // Cargar opciones y resultados al inicio
     await cargarOpciones();
     cargarResultados();
 });
+

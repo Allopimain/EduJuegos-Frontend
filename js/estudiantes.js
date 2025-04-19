@@ -1,14 +1,15 @@
+import API_BASE_URL from "./config.js";
+
 document.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
         window.location.href = "../pages/index.html";
-        return; // Redirigir si no hay sesión activa
+        return;
     }
 
-    // Función para cargar los estudiantes
     const cargarEstudiantes = async () => {
-        const response = await fetch("http://localhost:3005/api/estudiantes", {
+        const response = await fetch(`${API_BASE_URL}api/estudiantes`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
 
@@ -31,21 +32,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     };
 
-    // Función para agregar estudiante
     document.getElementById("estudianteForm").addEventListener("submit", async (event) => {
         event.preventDefault();
 
         const nombre = document.getElementById("nombre").value;
         const edad = document.getElementById("edad").value;
         const grado = document.getElementById("grado").value;
-
-        // Si existe un estudiante con id, se va a actualizar, de lo contrario, es un nuevo estudiante
         const estudianteId = document.getElementById("estudianteId").value;
 
         let response;
         if (estudianteId) {
-            // Actualizar estudiante
-            response = await fetch(`http://localhost:3005/api/estudiantes/${estudianteId}`, {
+            response = await fetch(`${API_BASE_URL}api/estudiantes/${estudianteId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -54,8 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 body: JSON.stringify({ nombre, edad, grado })
             });
         } else {
-            // Agregar nuevo estudiante
-            response = await fetch("http://localhost:3005/api/estudiantes", {
+            response = await fetch(`${API_BASE_URL}api/estudiantes`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -68,14 +64,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (response.ok) {
             cargarEstudiantes();
             document.getElementById("estudianteForm").reset();
-            document.getElementById("estudianteId").value = ""; // Limpiar ID del estudiante
+            document.getElementById("estudianteId").value = "";
         }
     });
 
-    // Función para eliminar estudiante
     window.eliminarEstudiante = async (id) => {
         if (confirm("¿Seguro que quieres eliminar este estudiante?")) {
-            await fetch(`http://localhost:3005/api/estudiantes/${id}`, {
+            await fetch(`${API_BASE_URL}api/estudiantes/${id}`, {
                 method: "DELETE",
                 headers: { "Authorization": `Bearer ${token}` }
             });
@@ -83,28 +78,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
-    // Función para editar estudiante
     window.editarEstudiante = async (id) => {
-        const response = await fetch(`http://localhost:3005/api/estudiantes/${id}`, {
+        const response = await fetch(`${API_BASE_URL}api/estudiantes/${id}`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
 
         const estudiante = await response.json();
 
-        // Rellenar el formulario con los datos del estudiante
         document.getElementById("nombre").value = estudiante.nombre;
         document.getElementById("edad").value = estudiante.edad;
         document.getElementById("grado").value = estudiante.grado;
-        document.getElementById("estudianteId").value = estudiante.id; // Agregar el ID para actualizarlo
+        document.getElementById("estudianteId").value = estudiante.id;
     };
 
-    // Función para cerrar sesión
     document.getElementById("logoutBtn").addEventListener("click", () => {
         localStorage.removeItem("token");
-        window.location.href = "../pages/index.html"; // Redirigir al login
+        window.location.href = "../pages/index.html";
     });
 
-    // Cargar estudiantes al inicio
     cargarEstudiantes();
 });
-

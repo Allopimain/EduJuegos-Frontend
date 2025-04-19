@@ -1,0 +1,14 @@
+{
+    "public": "pages",
+    "rewrites": [
+      {
+        "source": "/images/(.*)",
+        "destination": "/public/images/$1"
+      },
+      {
+        "source": "/js/(.*)",
+        "destination": "/public/js/$1"
+      }
+    ]
+  }
+  

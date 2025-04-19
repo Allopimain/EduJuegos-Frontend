@@ -1,4 +1,4 @@
-// js/estudiante-resultados.js
+import API_BASE_URL from './config.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('tokenEstudiante');
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   
     try {
-      const res = await fetch('http://localhost:3005/api/estudiante/resultados', {
+      const res = await fetch(`${API_BASE_URL}/api/estudiante/resultados`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -44,5 +44,4 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.error(error);
       alert('Hubo un error al cargar los resultados');
     }
-  });
-  
+});

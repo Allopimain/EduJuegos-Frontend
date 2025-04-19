@@ -1,3 +1,5 @@
+import API_BASE_URL from './config.js';
+
 document.getElementById('loginForm').addEventListener('submit', async function(event) {
     event.preventDefault();
 
@@ -6,7 +8,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     const loginError = document.getElementById('loginError');
 
     try {
-        const response = await fetch('http://localhost:3005/api/auth/login', {
+        const response = await fetch(`${API_BASE_URL}api/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
@@ -18,7 +20,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
             localStorage.setItem('token', data.token);
             window.location.href = 'dashboard.html';
         } else {
-            loginError.textContent = data.mensaje;
+            loginError.textContent = data.mensaje || 'Credenciales incorrectas';
             loginError.classList.remove('d-none');
         }
     } catch (error) {
@@ -26,3 +28,4 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         loginError.classList.remove('d-none');
     }
 });
+

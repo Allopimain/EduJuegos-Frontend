@@ -1,3 +1,5 @@
+import API_BASE_URL from "./config.js";
+
 document.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem("token");
 
@@ -8,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Cargar estudiantes en el select
     const cargarEstudiantes = async () => {
-        const response = await fetch("http://localhost:3005/api/estudiantes", {
+        const response = await fetch(`${API_BASE_URL}api/estudiantes`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
 
@@ -25,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Cargar los comentarios
     const cargarComentarios = async () => {
-        const responseComentarios = await fetch("http://localhost:3005/api/comentarios", {
+        const responseComentarios = await fetch(`${API_BASE_URL}api/comentarios`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
 
@@ -33,16 +35,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         const tbody = document.getElementById("comentariosLista");
         tbody.innerHTML = "";
 
-        const responseEstudiantes = await fetch("http://localhost:3005/api/estudiantes", {
+        const responseEstudiantes = await fetch(`${API_BASE_URL}api/estudiantes`, {
             headers: { "Authorization": `Bearer ${token}` }
         });
 
         const estudiantes = await responseEstudiantes.json();
 
         comentarios.forEach(com => {
-            // Encontrar el nombre del estudiante mediante el id
             const estudiante = estudiantes.find(est => est.id === com.id_estudiante);
-            const nombreEstudiante = estudiante ? estudiante.nombre : "Desconocido";  // Si no se encuentra el estudiante, mostrar "Desconocido"
+            const nombreEstudiante = estudiante ? estudiante.nombre : "Desconocido";
 
             const fila = document.createElement("tr");
             fila.innerHTML = `
@@ -64,7 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const id_estudiante = document.getElementById("id_estudiante").value;
         const mensaje = document.getElementById("mensaje").value;
 
-        const response = await fetch("http://localhost:3005/api/comentarios", {
+        const response = await fetch(`${API_BASE_URL}api/comentarios`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -82,7 +83,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Eliminar comentario
     window.eliminarComentario = async (id) => {
         if (confirm("¿Seguro que quieres eliminar este comentario?")) {
-            await fetch(`http://localhost:3005/api/comentarios/${id}`, {
+            await fetch(`${API_BASE_URL}api/comentarios/${id}`, {
                 method: "DELETE",
                 headers: { "Authorization": `Bearer ${token}` }
             });
@@ -90,25 +91,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
-    // Función para editar comentario
+    // Editar comentario
     window.editarComentario = (id) => {
         const comentario = document.querySelector(`button[onclick="editarComentario(${id})"]`).closest('tr');
         const mensaje = comentario.cells[1].innerText;
 
-        // Mostrar formulario de edición
         document.getElementById("editComentarioForm").classList.remove("d-none");
         document.getElementById("comentarioForm").classList.add("d-none");
 
-        // Rellenar el textarea con el comentario actual
         document.getElementById("editMensaje").value = mensaje;
 
-        // Cuando se envíe el formulario de edición
         document.getElementById("editComentarioForm").addEventListener("submit", async (event) => {
             event.preventDefault();
 
             const nuevoMensaje = document.getElementById("editMensaje").value;
 
-            const response = await fetch(`http://localhost:3005/api/comentarios/${id}`, {
+            const response = await fetch(`${API_BASE_URL}api/comentarios/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -125,8 +123,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     };
 
-    // Cargar los estudiantes y los comentarios al inicio
     await cargarEstudiantes();
     cargarComentarios();
 });
-
