@@ -25,8 +25,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await respuesta.json();
 
       if (respuesta.ok) {
-        mensajeDiv.innerHTML = `<div class="alert alert-success">${data.mensaje}</div>`;
+        mensajeDiv.innerHTML = `<div class="alert alert-success">${data.mensaje}. Serás redirigido al login...</div>`;
         formulario.reset();
+
+        // ❤️ Redirección automática al login de estudiante
+        setTimeout(() => {
+          window.location.href = "/pages/login-estudiante.html";
+        }, 2000);
       } else {
         mensajeDiv.innerHTML = `<div class="alert alert-danger">${data.mensaje}</div>`;
       }
@@ -36,4 +41,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+;
 

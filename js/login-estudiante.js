@@ -21,7 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (res.ok) {
         localStorage.setItem('tokenEstudiante', data.token);
         alert('Login exitoso');
-        window.location.href = "dashboard-estudiante.html";
+        window.location.href = "/pages/dashboard-estudiante.html";
+
       } else {
         alert(data.mensaje || 'Error al iniciar sesión');
       }

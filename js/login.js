@@ -18,7 +18,8 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 
         if (response.ok) {
             localStorage.setItem('token', data.token);
-            window.location.href = 'dashboard.html';
+            window.location.href = '/pages/dashboard.html';
+
         } else {
             loginError.textContent = data.mensaje || 'Credenciales incorrectas';
             loginError.classList.remove('d-none');
