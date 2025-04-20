@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar Estudiantes</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <script defer src="../js/estudiantes.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<script src="../js/logout.js"></script> <!-- ✅ Asegurar que el script se carga -->
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="dashboard.html">EduJuegos</a>
+            <button class="btn btn-danger" id="logoutBtn">Cerrar Sesión</button>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h2 class="text-center text-primary">Gestión de Estudiantes</h2>
+
+        <!-- Formulario para agregar o editar estudiante -->
+        <form id="estudianteForm" class="mt-4">
+            <input type="hidden" id="estudianteId"> <!-- Campo oculto para almacenar el ID del estudiante -->
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre del Estudiante:</label>
+                <input type="text" id="nombre" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="edad" class="form-label">Edad:</label>
+                <input type="number" id="edad" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="grado" class="form-label">Grado:</label>
+                <input type="text" id="grado" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-success w-100">Agregar Estudiante</button>
+        </form>
+
+        <h3 class="mt-5">Lista de Estudiantes</h3>
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Edad</th>
+                    <th>Grado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="estudiantesLista"></tbody>
+        </table>
+    </div>
+</body>
+</html>
