@@ -1,0 +1,17 @@
+{
+    "version": 2,
+    "builds": [
+      { "src": "index.html",              "use": "@vercel/static" },
+      { "src": "pages/**/*.html",         "use": "@vercel/static" },
+      { "src": "css/*.css",               "use": "@vercel/static" },
+      { "src": "js/*.js",                 "use": "@vercel/static" },
+      { "src": "images/**/*",             "use": "@vercel/static" }
+    ],
+    "routes": [
+      // Sirve index.html en la raíz
+      { "src": "/",          "dest": "/index.html" },
+      // Todo lo demás en su misma ruta
+      { "src": "/(.*)",      "dest": "/$1" }
+    ]
+  }
+  
