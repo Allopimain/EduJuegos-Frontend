@@ -1,37 +1,28 @@
-import API_BASE_URL from './config.js';
+document.getElementById('loginForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
 
-document.addEventListener("DOMContentLoaded", () => {
-  const formulario = document.getElementById('formLoginEstudiante');
-
-  formulario.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    // Agregamos el log para confirmar que el submit se dispara
-    console.log("Formulario enviado - login estudiante");
-
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value.trim();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const loginError = document.getElementById('loginError');
 
     try {
-      const res = await fetch(`${API_BASE_URL}api/estudiantes/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
+        const response = await fetch('http://localhost:3005/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
 
-      const data = await res.json();
+        const data = await response.json();
 
-      if (res.ok) {
-        localStorage.setItem('tokenEstudiante', data.token);
-        alert('Login exitoso');
-        window.location.href = "/pages/dashboard-estudiante.html";
-
-      } else {
-        alert(data.mensaje || 'Error al iniciar sesión');
-      }
+        if (response.ok) {
+            localStorage.setItem('token', data.token);
+            window.location.href = 'dashboard.html';
+        } else {
+            loginError.textContent = data.mensaje;
+            loginError.classList.remove('d-none');
+        }
     } catch (error) {
-      console.error('Error:', error);
-      alert('Error de conexión con el servidor');
+        loginError.textContent = 'Error de conexión';
+        loginError.classList.remove('d-none');
     }
-  });
 });
